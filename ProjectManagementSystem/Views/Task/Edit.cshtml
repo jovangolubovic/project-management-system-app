@@ -1,0 +1,151 @@
+﻿@model ProjectManagementSystem.Models.ViewModels.AccountViewModels.TaskViewModel
+@if (User.IsInRole(ProjectManagementSystem.Helper.Helper.Admin))
+{
+    <h4>Edit Task</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+
+
+            <form asp-action="Edit" method="post">
+                <input asp-for="Id" hidden />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Progress" class="control-label"></label>
+                    <input asp-for="Progress" class="form-control" />
+                    <span asp-validation-for="Progress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Deadline" class="control-label"> Date due (NOTE: Date format should be dd.mm.yyyy)</label>
+                    <input asp-for="Deadline" class="form-control" />
+                    <span asp-validation-for="Deadline" class="text-danger"></span>
+                </div>
+                <div class="form-group ">
+                    <label asp-for="DeveloperId" class="control-label"></label>
+                    @Html.DropDownList("developersId", new SelectList(ViewBag.Developers, "Id", "Name"), new { @class = "form-control select2" })
+                    <span asp-validation-for="DeveloperId" class="text-danger"></span>
+                </div>
+                <div class="col-md-10 offset-md-2 checkbox">
+                    <label asp-for="IsDeveloperAssigned" class="pr-4 pl-0">
+                        <input asp-for="IsDeveloperAssigned" />
+                    </label>
+                    Assign task to developer?
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <label asp-for="ManagerId" class="control-label"></label>
+                        @Html.DropDownList("managersId", new SelectList(ViewBag.Managers, "Id", "Name"), new { @class = "form-control select2" })
+                        <span asp-validation-for="ManagerId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Edit" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
+@if (User.IsInRole(ProjectManagementSystem.Helper.Helper.Developer))
+{
+
+    <h4>Edit Task</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+
+
+            <form asp-action="Edit" method="post">
+                <input asp-for="Id" hidden />
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group hide">
+                    <label asp-for="Progress" class="control-label"></label>
+                    <input asp-for="Progress" class="form-control" />
+                    <span asp-validation-for="Progress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Edit" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
+@if (User.IsInRole(ProjectManagementSystem.Helper.Helper.ProjectManager))
+{
+    <h4>Edit Task</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+
+
+            <form asp-action="Edit" method="post">
+                <input asp-for="Id" hidden />
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Progress" class="control-label"></label>
+                    <input asp-for="Progress" class="form-control" />
+                    <span asp-validation-for="Progress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Deadline" class="control-label"> Date due (NOTE: Date format should be dd.mm.yyyy)</label>
+                    <input asp-for="Deadline" class="form-control" />
+                    <span asp-validation-for="Deadline" class="text-danger"></span>
+                </div>
+                <div class="form-group ">
+                    <label asp-for="DeveloperId" class="control-label"></label>
+                    @Html.DropDownList("developersId", new SelectList(ViewBag.Developers, "Id", "Name"), new { @class = "form-control select2" })
+                    <span asp-validation-for="DeveloperId" class="text-danger"></span>
+                </div>
+                <div class="col-md-10 offset-md-2 checkbox">
+                    <label asp-for="IsDeveloperAssigned" class="pr-4 pl-0">
+                        <input asp-for="IsDeveloperAssigned" />
+                    </label>
+                    Assign task to developer?
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Edit" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

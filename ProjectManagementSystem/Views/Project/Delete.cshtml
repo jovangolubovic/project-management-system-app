@@ -1,0 +1,37 @@
+﻿@model ProjectManagementSystem.Models.DomainModels.Project
+
+<h2>Delete this project</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="DeletePost" method="post">
+            <input asp-for="Id" hidden />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Id" disabled class="form-control" placeholder="Id" />
+                <label asp-for="Id" class="control-label"></label>
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Name" disabled class="form-control" placeholder="Name" />
+                <label asp-for="Name" class="control-label"></label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Delete" class="w-100 btn btn-danger btn-lg btn-primary mb-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

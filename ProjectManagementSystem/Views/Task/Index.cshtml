@@ -1,0 +1,234 @@
+﻿@model IEnumerable<ProjectManagementSystem.Models.ViewModels.AccountViewModels.TaskViewModel>
+
+@if (User.IsInRole(ProjectManagementSystem.Helper.Helper.Admin))
+{
+    <div class="container p-3">
+        <div class="col">
+            <div class="container">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="text text-black-50>List of Tasks</a>
+                    <li />
+                    <li class="nav-item">
+                        <a class="btn btn-primary" asp-action="Create" asp-controller="Task">Create new Task</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <br />
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-bordered table-striped" style=" width: 100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Project
+                        </th>
+                        <th>
+                            Manager
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Progress
+                        </th>
+                        <th>
+                            Developer
+                        </th>
+                        <th>
+                            Deadline
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td width="10%">@item.Name</td>
+                            <td width="15%">@item.Description</td>
+                            <td width="15%">@item.ProjectName</td>
+                            <td width="15%">@item.ManagerName</td>
+                            <td width="15%">@item.Status</td>
+                            <td width="15%">@item.Progress % </td>
+                            <td width="15%">@item.DeveloperName</td>
+                            <td width="15%">@item.Deadline</td>
+
+
+
+                            <td width="30%">
+                                <div class="col-6 text-right role="group">
+
+                                    <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
+                                    <a asp-controller="Task" asp-action="Delete" asp-route-Id="@item.Id" class="btn btn-danger"> Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+
+    </div>
+}
+@if (User.IsInRole(ProjectManagementSystem.Helper.Helper.Developer))
+{
+    <div class="container p-3">
+        <div class="col">
+            <div class="container">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="text text-black-50>List of Tasks</a>
+                    <li />
+                    <li class="nav-item">
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <br />
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-bordered table-striped" style=" width: 100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Manager
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Progress
+                        </th>
+                        <th>
+                            Developer
+                        </th>
+                        <th>
+                            Deadline
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        @if (item.IsDeveloperAssigned == false || item.DeveloperName == User.Identity.Name)
+                        {
+                            <tr>
+                                <td width="10%">@item.Name</td>
+                                <td width="15%">@item.Description</td>
+                                <td width="15%">@item.ManagerName</td>
+                                <td width="15%">@item.Status</td>
+                                <td width="15%">@item.Progress % </td>
+                                <td width="15%">@item.DeveloperName</td>
+                                <td width="15%">@item.Deadline.</td>
+
+
+                                <td width="30%">
+                                    <div class="col-6 text-right role="group">
+
+                                        <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        }
+
+    </div>
+
+}
+@if (User.IsInRole(ProjectManagementSystem.Helper.Helper.ProjectManager))
+{
+    <div class="container p-3">
+        <div class="col">
+            <div class="container">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="text text-black-50>List of Tasks</a>
+                    <li />
+                    <li class="nav-item">
+                        <a class="btn btn-primary" asp-action="Create" asp-controller="Task">Create new Task</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <br />
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-bordered table-striped" style=" width: 100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Project
+                        </th>
+                        <th>
+                            Manager
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Progress
+                        </th>
+                        <th>
+                            Developer
+                        </th>
+                        <th>
+                            Deadline
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td width="10%">@item.Name</td>
+                            <td width="15%">@item.Description</td>
+                            <td width="15%">@item.ProjectName</td>
+                            <td width="15%">@item.ManagerName</td>
+                            <td width="14%">@item.Status</td>
+                            <td width="8%">@item.Progress % </td>
+                            <td width="15%">@item.DeveloperName</td>
+                            <td width="15%">@item.Deadline.</td>
+
+
+                            <td width="30%">
+                                <div class="col-6 text-right role="group">
+
+                                    <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+
+    </div>
+}

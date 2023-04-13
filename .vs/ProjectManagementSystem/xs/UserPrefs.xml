@@ -1,0 +1,48 @@
+﻿<Properties StartupConfiguration="{41DE8D12-C9A0-4B9E-931C-B5883E89D853}|https">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.ProjectManagementSystem PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ProjectManagementSystem/Controllers/TaskController.cs">
+    <Files>
+      <File FileName="ProjectManagementSystem/Data/ApplicationDbContext.cs" />
+      <File FileName="ProjectManagementSystem/Controllers/UserController.cs" />
+      <File FileName="ProjectManagementSystem/Views/User/Index.cshtml" />
+      <File FileName="ProjectManagementSystem/Views/User/Delete.cshtml" />
+      <File FileName="ProjectManagementSystem/Views/Shared/_Layout.cshtml" />
+      <File FileName="ProjectManagementSystem/Views/Shared/_Layout.cshtml.css" />
+      <File FileName="ProjectManagementSystem/Controllers/TaskController.cs" Line="45" Column="4" />
+      <File FileName="ProjectManagementSystem/Views/Task/Index.cshtml" />
+      <File FileName="ProjectManagementSystem/Models/ViewModels/TaskViewModel.cs" Line="16" Column="9" />
+      <File FileName="ProjectManagementSystem/Views/Task/Create.cshtml" />
+      <File FileName="ProjectManagementSystem/Views/Task/Edit.cshtml" />
+      <File FileName="ProjectManagementSystem/Views/Task/Delete.cshtml" />
+      <File FileName="ProjectManagementSystem/Models/DomainModels/ProjectTask.cs" Line="18" Column="9" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ProjectManagementSystem" expanded="True">
+            <Node name="ProjectManagementSystem" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="Controllers" expanded="True">
+                <Node name="TaskController.cs" selected="True" />
+              </Node>
+              <Node name="Data" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="DomainModels" expanded="True" />
+                <Node name="ViewModels" expanded="True" />
+              </Node>
+              <Node name="Views" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
