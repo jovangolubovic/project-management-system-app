@@ -8,6 +8,11 @@
             <form asp-action="Edit" method="post">
                 <input asp-for="Id" hidden />
                 <div asp-validation-summary="All" class="text-danger"></div>
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                    TempData["ErrorMessage"] = null; // set error message to null
+                }
                 <div class="form-floating mb-3">
                     <input asp-for="Name" class="form-control" placeholder="Name" />
                     <label asp-for="Name" class="control-label">Edit name of the Task</label>
@@ -30,7 +35,7 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    @Html.DropDownList("developerId", new SelectList(ViewBag.DeveloperList, "Id", "Name"), new { @class = "form-control select2" })
+                    @Html.DropDownList("developerId", new SelectList(ViewBag.DeveloperList, "Id", "Fullname"), new { @class = "form-control select2" })
                     <label asp-for="DeveloperId" class="control-label">Open this menu to change Developer</label>
                     <span asp-validation-for="DeveloperId" class="text-danger"></span>
                 </div>
@@ -41,7 +46,7 @@
                     Assign task to developer?
                 </div>
                 <div class="form-floating mb-3">
-                    @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Name"), new { @class = "form-control select2" })
+                    @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), new { @class = "form-control select2" })
                     <label asp-for="ManagerId" class="control-label">Open this menu to change Project Manager</label>
                     <span asp-validation-for="ManagerId" class="text-danger"></span>
                 </div>

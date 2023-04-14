@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Data;
 using ProjectManagementSystem.Models;
 using ProjectManagementSystem.Models.DomainModels;
@@ -49,7 +50,7 @@ namespace ProjectManagementSystem.Controllers
                 taskViewModel.Progress = t.Progress;
                 taskViewModel.ProjectId = t.ProjectId;
                 taskViewModel.IsDeveloperAssigned = t.IsDeveloperAssigned;
-
+               
                 List<String> projectName = (from p in _db.Projects
                                             where p.Id == t.ProjectId
                                             select p.Name
@@ -59,7 +60,7 @@ namespace ProjectManagementSystem.Controllers
 
                 var managerName = (from m in _db.Users
                                    where m.Id == t.ManagerId
-                                   select m.Name
+                                   select m.Name + " " + m.Surname
                                   ).ToList();
 
                 if (managerName.Count != 0)
@@ -69,7 +70,7 @@ namespace ProjectManagementSystem.Controllers
 
                 var developerName = (from d in _db.Users
                                      where d.Id == t.DeveloperId
-                                     select d.Name
+                                     select d.Name + " " + d.Surname
                                     ).ToList();
                 
                 string developerId = t.DeveloperId;
@@ -120,6 +121,7 @@ namespace ProjectManagementSystem.Controllers
             string deadline = taskViewModel.Deadline;
             task.Deadline = DateTime.ParseExact(deadline, "dd.MM.yyyy", null);
             task.ManagerId = Request.Form["managerId"];
+            
             string statusTask = Request.Form["status"];
 
             // Validation for developers, not more than 3 tasks
@@ -138,9 +140,12 @@ namespace ProjectManagementSystem.Controllers
                 }
                 else
                 {
-                    return Ok("Cannot assign more than 3 Tasks to one Developer!");
+                    TempData["ErrorMessage"] = "Cannot assign more than 3 Tasks to one Developer!";
+                    return RedirectToAction("Create"); 
                 }
+
             }
+            
             task.Status = status.New;
             task.Progress = 0;
 
@@ -236,7 +241,8 @@ namespace ProjectManagementSystem.Controllers
                 }
                 else
                 {
-                    return Ok("Can not assign more than 3 tasks to one developer!");
+                    TempData["ErrorMessage"] = "Cannot assign more than 3 Tasks to one Developer!";
+                    return RedirectToAction("Edit");
                 }
             }
 
@@ -318,7 +324,7 @@ namespace ProjectManagementSystem.Controllers
 
             var developerName = (from d in _db.Users
                                      where d.Id == task.DeveloperId
-                                     select d.Name
+                                     select d.Name + " " + d.Surname
                                     ).ToList();
 
             if(developerName != null)
@@ -332,7 +338,7 @@ namespace ProjectManagementSystem.Controllers
 
             var managerName = (from m in _db.Users
                                where m.Id == task.ManagerId
-                               select m.Name
+                               select m.Name + " " + m.Surname
                               ).ToList();
 
             taskViewModel.ManagerName = managerName.First();
@@ -351,6 +357,7 @@ namespace ProjectManagementSystem.Controllers
             {
                 return NotFound();
             }
+            
             _db.Tasks.Remove(task);
             _db.SaveChanges();
             updateProjectProgress(task);
@@ -386,7 +393,6 @@ namespace ProjectManagementSystem.Controllers
             {
                 project.Progress = 0;
             }
-            
             
             _db.Update(project);
             _db.SaveChanges();

@@ -1,10 +1,17 @@
 ﻿@model ProjectManagementSystem.Models.ViewModels.AccountViewModels.TaskViewModel
-<h2>Create New Project</h2>
+
+<h2>Create New Task</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
+            <div id="error-message" class="alert alert-danger" style="display: none"></div>
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                TempData["ErrorMessage"] = null; // set error message to null
+            }
             <div class="form-floating mb-3">
                 <input asp-for="Name" class="form-control" placeholder="Name" />
                 <label asp-for="Name">Name of the Task</label>
@@ -17,7 +24,7 @@
             </div>
             <div class="form-floating mb-3">
                 @Html.DropDownList("developerId", new SelectList(ViewBag.DeveloperList, "Id", "Fullname"), new { @class = "form-control select2" })
-                <label asp-for="DeveloperId" class="control-label"></label>
+                <label asp-for="DeveloperId" class="control-label">Open this menu to select Developer</label>
                 <span asp-validation-for="DeveloperId" class="text-danger"></span>
             </div>
             <div class="checkbox mb-3">
@@ -41,7 +48,6 @@
                 <label asp-for="ProjectId" class="control-label">Project</label>
                 <span asp-validation-for="ProjectId" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <input type="submit" value="Create" class="w-100 btn btn-lg btn-primary mb-3" />
             </div>

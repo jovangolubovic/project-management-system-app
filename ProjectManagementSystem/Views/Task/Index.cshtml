@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<ProjectManagementSystem.Models.ViewModels.AccountViewModels.TaskViewModel>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 
 @if (User.IsInRole(ProjectManagementSystem.Helper.Helper.Admin))
 {
@@ -22,10 +24,10 @@
                         Description
                     </th>
                     <th>
-                        Project
+                        Project name
                     </th>
                     <th>
-                        Project Manager
+                        Manager
                     </th>
                     <th>
                         Developer
@@ -73,8 +75,7 @@
 {
     <h2>List of Tasks</h2>
     <hr />
-    
-    
+
     @if (Model.Count() > 0)
     {
         <table class="table table-bordered table-striped" style=" width: 100%">
@@ -85,6 +86,9 @@
                     </th>
                     <th>
                         Description
+                    </th>
+                    <th>
+                        Project name
                     </th>
                     <th>
                         Manager
@@ -105,12 +109,13 @@
             </thead>
             <tbody>
                 @foreach (var item in Model)
-                {
+                {                       
                     @if (item.IsDeveloperAssigned == false || item.DeveloperName == User.Identity.Name)
                     {
                         <tr>
                             <td width="11%">@item.Name</td>
                             <td width="11%">@item.Description</td>
+                            <td width="11%">@item.ProjectName</td>
                             <td width="11%">@item.ManagerName</td>
                             <td width="11%">@item.DeveloperName</td>
                             <td width="11%">@item.Status</td>

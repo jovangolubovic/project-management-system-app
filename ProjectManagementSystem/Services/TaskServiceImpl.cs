@@ -24,7 +24,8 @@ namespace ProjectManagementSystem.Services
                               select new DeveloperViewModel
                               {
                                   Id = user.Id,
-                                  Name = user.Name
+                                  Name = user.Name,
+                                  Surname = user.Surname
                               }
                               ).ToList();
 
@@ -61,7 +62,8 @@ namespace ProjectManagementSystem.Services
                          select new UserViewModel
                          {
                              Id = user.Id,
-                             Name = user.Name
+                             Name = user.Name,
+                             Surname = user.Surname
                          }
                         ).ToList();
 
