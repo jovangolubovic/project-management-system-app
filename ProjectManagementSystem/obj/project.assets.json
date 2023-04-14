@@ -10858,11 +10858,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jovangolubovic/Desktop/Novi pokusaj od nule/ProjectManagementSystem/ProjectManagementSystem/ProjectManagementSystem.csproj",
+      "projectUniqueName": "/Users/jovangolubovic/Desktop/git repo za kibongu/project-management-system-app/ProjectManagementSystem/ProjectManagementSystem.csproj",
       "projectName": "ProjectManagementSystem",
-      "projectPath": "/Users/jovangolubovic/Desktop/Novi pokusaj od nule/ProjectManagementSystem/ProjectManagementSystem/ProjectManagementSystem.csproj",
+      "projectPath": "/Users/jovangolubovic/Desktop/git repo za kibongu/project-management-system-app/ProjectManagementSystem/ProjectManagementSystem.csproj",
       "packagesPath": "/Users/jovangolubovic/.nuget/packages/",
-      "outputPath": "/Users/jovangolubovic/Desktop/Novi pokusaj od nule/ProjectManagementSystem/ProjectManagementSystem/obj/",
+      "outputPath": "/Users/jovangolubovic/Desktop/git repo za kibongu/project-management-system-app/ProjectManagementSystem/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/jovangolubovic/.nuget/NuGet/NuGet.Config"

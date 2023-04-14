@@ -1,66 +1,58 @@
 ﻿@model ProjectManagementSystem.Models.ViewModels.AccountViewModels.TaskViewModel
-<h4>Tasks</h4>
+<h2>Create New Project</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+            <div class="form-floating mb-3">
+                <input asp-for="Name" class="form-control" placeholder="Name" />
+                <label asp-for="Name">Name of the Task</label>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
-            <div class="col-md-10">
-                <label asp-for="ManagerId" class="control-label"> Select manager</label>
-                @Html.DropDownList("managersId", new SelectList(ViewBag.Managers, "Id", "Name"), new { @class = "form-control select2" })
+            <div class="form-floating mb-3">
+                @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), new { @class = "form-control select2" })
+                <label asp-for="ManagerId">Open this menu to select Project Manager</label>
                 <span asp-validation-for="ManagerId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-
-                <div class="form-group">
-                    <label asp-for="DeveloperId" class="control-label"></label>
-                    @Html.DropDownList("developersId", new SelectList(ViewBag.Developers, "Id", "Name"), new { @class = "form-control select2" })
-                    <span asp-validation-for="DeveloperId" class="text-danger"></span>
-                </div>
-                <div class="col-md-10 offset-md-2 checkbox">
-                    <label asp-for="IsDeveloperAssigned" class="pr-4 pl-0">
-                        <input asp-for="IsDeveloperAssigned" />
-                    </label>
-                    Assign task to developer?
-                </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
-                    <input asp-for="Description" class="form-control" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Deadline" class="control-label"> Date due (NOTE: Date format should be dd.mm.yyyy)</label>
-                    <input asp-for="Deadline" class="form-control" />
-                    <span asp-validation-for="Deadline" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ProjectId" class="control-label">Project</label>
-                    @Html.DropDownList("projectsId", new SelectList(ViewBag.Projects, "Id", "Name"), new { @class = "form-control select2" })
-                    <span asp-validation-for="ProjectId" class="text-danger"></span>
-                </div>
-
-
-
+            <div class="form-floating mb-3">
+                @Html.DropDownList("developerId", new SelectList(ViewBag.DeveloperList, "Id", "Fullname"), new { @class = "form-control select2" })
+                <label asp-for="DeveloperId" class="control-label"></label>
+                <span asp-validation-for="DeveloperId" class="text-danger"></span>
             </div>
+            <div class="checkbox mb-3">
+                <label asp-for="IsDeveloperAssigned">
+                    <input asp-for="IsDeveloperAssigned" />
+                </label>
+                Assign task to developer?
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Description" class="form-control" placeholder="Name" />
+                <label asp-for="Description" class="control-label"></label>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Deadline" class="form-control" placeholder="Name" />
+                <label asp-for="Deadline" class="control-label"></label>
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                @Html.DropDownList("projectId", new SelectList(ViewBag.ProjectList, "Id", "Name"), new { @class = "form-control select2" })
+                <label asp-for="ProjectId" class="control-label">Project</label>
+                <span asp-validation-for="ProjectId" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="w-100 btn btn-lg btn-primary mb-3" />
             </div>
         </form>
     </div>
-</div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+    @section Scripts{
+        @{
+            <partial name="_ValidationScriptsPartial" />
+        }
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-@section Scripts{
-    @{
-        <partial name="_ValidationScriptsPartial" />
     }
-
-}

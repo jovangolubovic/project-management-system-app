@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using ProjectManagementSystem.Data;
+using ProjectManagementSystem.Models;
 using ProjectManagementSystem.Models.DomainModels;
 using ProjectManagementSystem.Models.ViewModels.AccountViewModels;
 using ProjectManagementSystem.Services;
@@ -15,133 +17,143 @@ namespace ProjectManagementSystem.Controllers
 {
     public class TaskController : Controller
     {
-        private readonly ITaskService _taskService;
+        private readonly ITaskService _iTaskService;
+        private readonly UserManager<ApplicationUser> _userManager;
         ApplicationDbContext _db;
 
-        public TaskController(ITaskService taskService, ApplicationDbContext db)
+        public TaskController(ITaskService taskService, ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             _db = db;
-            _taskService = taskService;
+            _iTaskService = taskService;
+            _userManager = userManager;
         }
 
-        //INDEX
+        // GET: 
+        // Returning View with List of Tasks
         public IActionResult Index()
         {
-            ViewBag.DeveloperList = _taskService.getDeveloperList();
-            ViewBag.ManagersList = _taskService.getManagerList();
+            ViewBag.DeveloperList = _iTaskService.getDeveloperList();
+            ViewBag.ManagerList = _iTaskService.getManagerList();
 
-            List<TaskViewModel> tasksVM = new List<TaskViewModel>();
-            IEnumerable<ProjectTask> objList = _db.Tasks;
-            foreach (ProjectTask t in objList)
+            List<TaskViewModel> taskViewModelList = new List<TaskViewModel>();
+            List<ProjectTask> taskList = _db.Tasks.ToList();
+            foreach (ProjectTask t in taskList)
             {
-                TaskViewModel taskvm = new TaskViewModel();
-                taskvm.Name = t.Name;
-                taskvm.Description = t.Description;
-                taskvm.Id = t.Id;
-                taskvm.Status = t.Status;
-                taskvm.Progress = t.Progress;
-                taskvm.ProjectId = t.ProjectId;
-                taskvm.IsDeveloperAssigned = t.IsDeveloperAssigned;
-                taskvm.Deadline = t.Deadline.ToString().Substring(0, t.Deadline.ToString().Length - 10);
-                List<String> projectname = (from p in _db.Projects
+                TaskViewModel taskViewModel = new TaskViewModel();
+
+                taskViewModel.Id = t.Id;
+                taskViewModel.Name = t.Name;
+                taskViewModel.Status = t.Status;
+                taskViewModel.Deadline = t.Deadline.ToString().Substring(0, t.Deadline.ToString().Length - 10);
+                taskViewModel.Description = t.Description;
+                taskViewModel.Progress = t.Progress;
+                taskViewModel.ProjectId = t.ProjectId;
+                taskViewModel.IsDeveloperAssigned = t.IsDeveloperAssigned;
+
+                List<String> projectName = (from p in _db.Projects
                                             where p.Id == t.ProjectId
                                             select p.Name
-                                               ).ToList();
-                taskvm.ProjectName = projectname.First();
-                var managername = (from m in _db.Users
+                                           ).ToList();
+
+                taskViewModel.ProjectName = projectName.First();
+
+                var managerName = (from m in _db.Users
                                    where m.Id == t.ManagerId
                                    select m.Name
-                                ).ToList();
-                var developername = (from d in _db.Users
-                                     where d.Id == t.DeveloperId
-                                     select d.Email
-                                ).ToList();
-                if (managername.Count != 0)
+                                  ).ToList();
+
+                if (managerName.Count != 0)
                 {
-                    taskvm.ManagerName = managername.First();
+                    taskViewModel.ManagerName = managerName.First();
                 }
 
+                var developerName = (from d in _db.Users
+                                     where d.Id == t.DeveloperId
+                                     select d.Name
+                                    ).ToList();
+                
                 string developerId = t.DeveloperId;
-                int developerTaks = (from task in _db.Tasks
+
+                int developerTask = (from task in _db.Tasks
                                      where developerId == task.DeveloperId
                                      select task.DeveloperId
-                                     ).Count();
-                if (developerTaks < 3)
-                {
-                    taskvm.DeveloperId = developerId;
+                                    ).Count();
 
+                if (developerTask < 3)
+                {
+                    taskViewModel.DeveloperId = developerId;
                 }
 
-                if (developername.Count != 0)
+                if (developerName.Count != 0)
                 {
-                    taskvm.DeveloperName = developername.First();
+                    taskViewModel.DeveloperName = developerName.First();
                 }
 
-                tasksVM.Add(taskvm);
+                taskViewModelList.Add(taskViewModel);
             }
 
-            return View(tasksVM);
+            return View(taskViewModelList);
         }
 
-        //CREATE GET
+        // GET: 
+        // Returning View for Creation of Task
         public IActionResult Create()
         {
-            ViewBag.Status = _taskService.getStatusList();
-            ViewBag.Managers = _taskService.getManagerList();
-            ViewBag.Developers = _taskService.getDeveloperList();
-            ViewBag.Projects = _taskService.getProjectList();
+            ViewBag.Status = _iTaskService.getStatusList();
+            ViewBag.ManagerList = _iTaskService.getManagerList();
+            ViewBag.DeveloperList = _iTaskService.getDeveloperList();
+            ViewBag.ProjectList = _iTaskService.getProjectList();
 
             return View();
         }
-        //CREATE POST
+
+        // POST:
+        // Creating New Task and adding it to database
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TaskViewModel obj)
+        public async Task<IActionResult> Create(TaskViewModel taskViewModel)
         {
-
-
             ProjectTask task = new ProjectTask();
-            task.Description = obj.Description;
-            task.Name = obj.Name;
-            string due = obj.Deadline;
-            task.Deadline = DateTime.ParseExact(due, "dd.MM.yyyy", null);
-            task.ManagerId = Request.Form["managersId"];
+            task.Name = taskViewModel.Name;
+            task.Description = taskViewModel.Description;
+            task.AdminId = _userManager.GetUserId(User);
+            string deadline = taskViewModel.Deadline;
+            task.Deadline = DateTime.ParseExact(deadline, "dd.MM.yyyy", null);
+            task.ManagerId = Request.Form["managerId"];
             string statusTask = Request.Form["status"];
 
-            //validation for developers, not more than 3 tasks
-            string developerId = Request.Form["developersId"];
-            int developerTaks = (from t in _db.Tasks
+            // Validation for developers, not more than 3 tasks
+            string developerId = Request.Form["developerId"];
+            int developerTask = (from t in _db.Tasks
                                  where developerId == t.DeveloperId
                                  select t.DeveloperId
-                                 ).Count();
+                                ).Count();
 
-            if (obj.IsDeveloperAssigned)
+            if (taskViewModel.IsDeveloperAssigned)
             {
-                if (developerTaks < 3)
+                if (developerTask < 3)
                 {
                     task.DeveloperId = developerId;
                     task.IsDeveloperAssigned = true;
-
                 }
                 else
                 {
-                    return Ok("Can not assign more than 3 tasks to one developer!");
+                    return Ok("Cannot assign more than 3 Tasks to one Developer!");
                 }
             }
             task.Status = status.New;
             task.Progress = 0;
 
-            //add project to task
-            string projectId = Request.Form["projectsId"];
-            int projectID = int.Parse(projectId);
-            var projects = (from proj in _db.Projects
-                            where proj.Id == projectID
-                            select proj
-                               ).ToList();
-            Project pro = projects.First();
-            task.ProjectId = pro.Id;
+            // Add Project to Task
+            string projectId = Request.Form["projectId"];
+            int pId = int.Parse(projectId);
+            var projects = (from p in _db.Projects
+                            where p.Id == pId
+                            select p
+                           ).ToList();
 
-
+            Project project = projects.First();
+            task.ProjectId = project.Id;
 
             _db.Add(task);
             _db.SaveChanges();
@@ -153,8 +165,8 @@ namespace ProjectManagementSystem.Controllers
             return RedirectToAction("Index");
         }
 
-
-        //EDIT GET
+        // GET:
+        // Returning View for Editing of an existing Task
         public IActionResult Edit(int? id)
         {
             if (id == 0 || id == null)
@@ -162,8 +174,8 @@ namespace ProjectManagementSystem.Controllers
                 return NotFound();
             }
 
-            List<ProjectTask> tasksVM = new List<ProjectTask>();
-            IEnumerable<ProjectTask> objList = _db.Tasks;
+            List<ProjectTask> taskViewModelList = new List<ProjectTask>();
+            IEnumerable<ProjectTask> taskList = _db.Tasks;
             ProjectTask t = _db.Tasks.Find(id);
 
             if (t == null)
@@ -171,54 +183,56 @@ namespace ProjectManagementSystem.Controllers
                 return NotFound();
             }
 
-            TaskViewModel taskvm = new TaskViewModel();
-            taskvm.Name = t.Name;
-            taskvm.Description = t.Description;
-            taskvm.Id = t.Id;
-            taskvm.Status = t.Status;
-            taskvm.Progress = t.Progress;
-            taskvm.ProjectId = t.ProjectId;
-            var managername = (from m in _db.Users
+            TaskViewModel taskViewModel = new TaskViewModel();
+            taskViewModel.Id = t.Id;
+            taskViewModel.Name = t.Name;
+            taskViewModel.Status = t.Status;
+            taskViewModel.Deadline = t.Deadline.ToString().Substring(0, t.Deadline.ToString().Length - 10);//
+            taskViewModel.Description = t.Description;
+            taskViewModel.Progress = t.Progress;
+            taskViewModel.ProjectId = t.ProjectId;
+
+            var managerName = (from m in _db.Users
                                where m.Id == t.ManagerId
                                select m.Name
-                ).ToList();
+                              ).ToList();
 
-            if (managername.Count != 0)
+            if (managerName.Count != 0)
             {
-                taskvm.ManagerName = managername.First();
+                taskViewModel.ManagerName = managerName.First();
             }
-            ViewBag.Managers = _taskService.getManagerList();
-            ViewBag.Developers = _taskService.getDeveloperList();
-            ViewBag.Projects = _taskService.getProjectList();
 
-            return View(taskvm);
+            ViewBag.ManagerList = _iTaskService.getManagerList();
+            ViewBag.DeveloperList = _iTaskService.getDeveloperList();
+            ViewBag.ProjectList = _iTaskService.getProjectList();
 
+            return View(taskViewModel);
         }
-        //EDIT POST
 
+        // POST:
+        // Updating Existing Task and Saving to Database
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(TaskViewModel obj)
+        public IActionResult Edit(TaskViewModel taskViewModel)
         {
 
-            ProjectTask t = _db.Tasks.Find(obj.Id);
+            ProjectTask t = _db.Tasks.Find(taskViewModel.Id);
 
-            var managerId = Request.Form["managersId"];
-            string developerId = Request.Form["developersId"];
+            var managerId = Request.Form["managerId"];
+            string developerId = Request.Form["developerId"];
 
             //Developer evaluation
-            int developerTaks = (from tasks in _db.Tasks
+            int developerTask = (from tasks in _db.Tasks
                                  where developerId == tasks.DeveloperId
                                  select tasks.DeveloperId
-                                 ).Count();
+                                ).Count();
 
-            if (obj.IsDeveloperAssigned)
+            if (taskViewModel.IsDeveloperAssigned)
             {
-                if (developerTaks < 3)
+                if (developerTask < 3)
                 {
                     t.DeveloperId = developerId;
                     t.IsDeveloperAssigned = true;
-
                 }
                 else
                 {
@@ -226,46 +240,42 @@ namespace ProjectManagementSystem.Controllers
                 }
             }
 
-            //if Admin unasssigns developer 
-            if (obj.IsDeveloperAssigned == false && obj.Name != null && obj.Deadline != null)
+            // If User unassigns Developer from Task 
+            if (taskViewModel.IsDeveloperAssigned == false && taskViewModel.Name != null && taskViewModel.Deadline != null)
             {
                 t.DeveloperId = null;
                 t.IsDeveloperAssigned = false;
-                t.Deadline = DateTime.ParseExact(obj.Deadline, "dd.MM.yyyy", null);
-
+                t.Deadline = DateTime.ParseExact(taskViewModel.Deadline, "dd.MM.yyyy", null);
             }
-            //if Manager unasssigns developer 
-            if (obj.IsDeveloperAssigned == false && obj.Name == null && obj.Deadline != null)
+
+            //if Manager unassigns developer from Task
+            if (taskViewModel.IsDeveloperAssigned == false && taskViewModel.Name == null && taskViewModel.Deadline != null)
             {
                 t.DeveloperId = null;
                 t.IsDeveloperAssigned = false;
                 try
                 {
-                    t.Deadline = DateTime.ParseExact(obj.Deadline, "dd.MM.yyyy", null);
+                    t.Deadline = DateTime.ParseExact(taskViewModel.Deadline, "dd.MM.yyyy", null);
                 }
                 catch
                 {
-                    new Exception("Invalid date format");
-                    return Ok("Invalid date format, go back and enter valid date format: DD.MM.YYYY");
+                    new Exception("Invalid Date format");
+                    return Ok("Invalid Date format, go back and enter valid Date format: DD.MM.YYYY");
                 }
-
             }
-
-
-
 
             //In case developer is assigned, name and manager will return null,
             //so they stay unchanged.
-            if (obj.Name != null)
+            if (taskViewModel.Name != null)
             {
-                t.Name = obj.Name;
+                t.Name = taskViewModel.Name;
                 t.ManagerId = managerId;
-                t.Deadline = DateTime.ParseExact(obj.Deadline, "dd.MM.yyyy", null);
-
-
+                t.Deadline = DateTime.ParseExact(taskViewModel.Deadline, "dd.MM.yyyy", null);
             }
-            t.Description = obj.Description;
-            t.Progress = obj.Progress;
+
+            t.Description = taskViewModel.Description;
+            t.Progress = taskViewModel.Progress;
+
             if (t.Progress == 100)
             {
                 t.Status = status.Finished;
@@ -275,42 +285,82 @@ namespace ProjectManagementSystem.Controllers
                 t.Status = status.InProgress;
 
             }
+
             updateProjectProgress(t);
             _db.Update(t);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        // GET:
+        // Returning View for Deleting a Task
         public IActionResult Delete(int? id)
         {
             if (id == 0 || id == null)
             {
                 return NotFound();
             }
-            var obj = _db.Tasks.Find(id);
-            if (obj == null)
+            var task = _db.Tasks.Find(id);
+            if (task == null)
             {
                 return NotFound();
             }
 
-            return View(obj);
+            TaskViewModel taskViewModel = new TaskViewModel();
+            taskViewModel.Id = task.Id;
+            taskViewModel.Name = task.Name;
+            List<String> projectName = (from p in _db.Projects
+                                        where p.Id == task.ProjectId
+                                        select p.Name
+                                       ).ToList();
+
+            taskViewModel.ProjectName = projectName.First();
+
+            var developerName = (from d in _db.Users
+                                     where d.Id == task.DeveloperId
+                                     select d.Name
+                                    ).ToList();
+
+            if(developerName != null)
+            {
+                taskViewModel.DeveloperName = developerName.FirstOrDefault();
+            }
+            //else
+            //{
+            //    taskViewModel.DeveloperName = " ";
+            //}
+
+            var managerName = (from m in _db.Users
+                               where m.Id == task.ManagerId
+                               select m.Name
+                              ).ToList();
+
+            taskViewModel.ManagerName = managerName.First();
+
+            return View(taskViewModel);
         }
+
+        // POST:
+        // Deleting Task from Database by Task's Id
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.Tasks.Find(id);
-            if (obj == null)
+            var task = _db.Tasks.Find(id);
+            if (task == null)
             {
                 return NotFound();
             }
-            _db.Tasks.Remove(obj);
+            _db.Tasks.Remove(task);
             _db.SaveChanges();
-            updateProjectProgress(obj);
+            updateProjectProgress(task);
             return RedirectToAction("Index");
         }
+
+        // Method for Updating progress of Project, when new Tasks are added
         public void updateProjectProgress(ProjectTask t)
         {
-            int taskscount = (from tasks in _db.Tasks
+            int tasksCount = (from tasks in _db.Tasks
                               where tasks.ProjectId == t.ProjectId
                               select tasks.Id
                              ).Count();
@@ -322,16 +372,25 @@ namespace ProjectManagementSystem.Controllers
                     sum += task.Progress;
                 }
             }
-            int progressProject = sum / taskscount;
+
             Project project = (from p in _db.Projects
                                where p.Id == t.ProjectId
                                select p
-                         ).First();
-            project.Progress = progressProject;
+                              ).First();
+            if (sum != 0)
+            {
+                int progressOfProject = sum / tasksCount;
+                project.Progress = progressOfProject;
+            }
+            else
+            {
+                project.Progress = 0;
+            }
+            
+            
             _db.Update(project);
             _db.SaveChanges();
         }
     }
-
 }
 

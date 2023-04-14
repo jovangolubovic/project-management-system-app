@@ -1,63 +1,43 @@
-﻿@model ProjectManagementSystem.Models.DomainModels.ProjectTask
+﻿@model ProjectManagementSystem.Models.ViewModels.AccountViewModels.TaskViewModel
 
-
-<form asp-action="DeletePost" method="post">
-    <input asp-for="Id" hidden />
-    <div class="border p-3">
-        <div class="form-group row">
-            <h2 class="text-black-50 pl-3">Delete Task</h2>
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-group row">
-                        <div class="col-6">
-                            <label asp-for="Name"></label>
-                        </div>
-                        <div class="col-6">
-                            <label asp-for="Id"> </label>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-6">
-                            <input asp-for="Name" disabled class="form-control" />
-
-                        </div>
-                        <div class="col-6">
-                            <input asp-for="Id" disabled class="form-control" />
-
-                        </div>
-
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-8 offset-2 row">
-                            <div class="col">
-
-                                <input type="submit" class="btn btn-danger w-75" value="Delete" />
-
-                            </div>
-                            <div class="col">
-                                <a asp-action="Index" class="btn btn-success">Back to tasks</a>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
+<h2>Delete this project</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="DeletePost" method="post">
+            <input asp-for="Id" hidden />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Name" disabled class="form-control" placeholder="Name" />
+                <label asp-for="Name" class="control-label">Task Name</label>
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
-        </div>
-
-
-
-
-
-
-
-
-
+            <div class="form-floating mb-3">
+                <input asp-for="ProjectName" disabled class="form-control" placeholder="ProjectName" />
+                <label asp-for="ProjectName" class="control-label">Project Name</label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="ManagerName" disabled class="form-control" placeholder="Id" />
+                <label asp-for="ManagerName" class="control-label">Project Manager</label>
+                <span asp-validation-for="ManagerName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="DeveloperName" disabled class="form-control" placeholder="Id" />
+                <label asp-for="DeveloperName" class="control-label">Developer</label>
+                <span asp-validation-for="DeveloperName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Delete" class="w-100 btn btn-danger btn-lg btn-primary mb-3" />
+            </div>
+        </form>
     </div>
+</div>
 
-</form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
 @section Scripts{
     @{
         <partial name="_ValidationScriptsPartial" />

@@ -23,13 +23,13 @@ namespace ProjectManagementSystem.Models.DomainModels
 
         public int Progress { get; set; }
 
-        public string DeveloperId { get; set; }
+        public string? DeveloperId { get; set; }
 
-        public string ManagerId { get; set; }
+        public string? ManagerId { get; set; }
 
         public bool IsDeveloperAssigned { get; set; }
 
-        public string AdminId { get; set; }
+        public string? AdminId { get; set; }
 
         public int ProjectId { get; set; }
     }

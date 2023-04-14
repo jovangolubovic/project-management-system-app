@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vXepvUfl5q/MXxyl9u7AByK0LIms+KYdt9avoN8zpmEfLIPC2a910R5VlKGAExvQka5yXzUhdPI1bfYqRRubJw==",
+  "dgSpecHash": "9R46qBJGwmoZ4+oZVAfPYa7jvHYeI5v5lP6b0oWIxzrmlqH9nJP3i6yECFvdHM53TF23WHxAVnX+qfEwpG4Juw==",
   "success": true,
-  "projectFilePath": "/Users/jovangolubovic/Desktop/Novi pokusaj od nule/ProjectManagementSystem/ProjectManagementSystem/ProjectManagementSystem.csproj",
+  "projectFilePath": "/Users/jovangolubovic/Desktop/git repo za kibongu/project-management-system-app/ProjectManagementSystem/ProjectManagementSystem.csproj",
   "expectedPackageFiles": [
     "/Users/jovangolubovic/.nuget/packages/azure.core/1.24.0/azure.core.1.24.0.nupkg.sha512",
     "/Users/jovangolubovic/.nuget/packages/azure.identity/1.6.0/azure.identity.1.6.0.nupkg.sha512",
