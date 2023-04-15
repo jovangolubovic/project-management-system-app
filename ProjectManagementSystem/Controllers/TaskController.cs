@@ -36,6 +36,13 @@ namespace ProjectManagementSystem.Controllers
             ViewBag.DeveloperList = _iTaskService.getDeveloperList();
             ViewBag.ManagerList = _iTaskService.getManagerList();
 
+            var userId = _userManager.GetUserId(User);
+            var nameOfUser = (from u in _db.Users
+                              where u.Id == userId
+                              select u.Name + " " + u.Surname).ToList().First();
+
+            ViewBag.NameOfUser = nameOfUser;
+
             List<TaskViewModel> taskViewModelList = new List<TaskViewModel>();
             List<ProjectTask> taskList = _db.Tasks.ToList();
             foreach (ProjectTask t in taskList)
@@ -63,16 +70,31 @@ namespace ProjectManagementSystem.Controllers
                                    select m.Name + " " + m.Surname
                                   ).ToList();
 
+                var managerUserName = (from m in _db.Users
+                                   where m.Id == t.ManagerId
+                                   select m.Email
+                                  ).ToList();
+
                 if (managerName.Count != 0)
                 {
                     taskViewModel.ManagerName = managerName.First();
+                }
+
+                if (managerUserName.Count != 0)
+                {
+                    taskViewModel.ManagerUserName = managerUserName.First();
                 }
 
                 var developerName = (from d in _db.Users
                                      where d.Id == t.DeveloperId
                                      select d.Name + " " + d.Surname
                                     ).ToList();
-                
+
+                var developerUserName = (from d in _db.Users
+                                     where d.Id == t.DeveloperId
+                                     select d.Email
+                                    ).ToList();
+
                 string developerId = t.DeveloperId;
 
                 int developerTask = (from task in _db.Tasks
@@ -88,6 +110,11 @@ namespace ProjectManagementSystem.Controllers
                 if (developerName.Count != 0)
                 {
                     taskViewModel.DeveloperName = developerName.First();
+                }
+
+                if (developerUserName.Count != 0)
+                {
+                    taskViewModel.DeveloperUserName = developerUserName.First();
                 }
 
                 taskViewModelList.Add(taskViewModel);
@@ -291,6 +318,10 @@ namespace ProjectManagementSystem.Controllers
                 t.Status = status.InProgress;
 
             }
+            if(t.Progress == 0)
+            {
+                t.Status = status.New;
+            }
 
             updateProjectProgress(t);
             _db.Update(t);
@@ -330,11 +361,7 @@ namespace ProjectManagementSystem.Controllers
             if(developerName != null)
             {
                 taskViewModel.DeveloperName = developerName.FirstOrDefault();
-            }
-            //else
-            //{
-            //    taskViewModel.DeveloperName = " ";
-            //}
+            }            
 
             var managerName = (from m in _db.Users
                                where m.Id == task.ManagerId

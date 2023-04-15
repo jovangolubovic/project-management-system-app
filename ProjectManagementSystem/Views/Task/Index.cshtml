@@ -46,6 +46,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
+
                     <tr>
                         <td width="11%">@item.Name</td>
                         <td width="11%">@item.Description</td>
@@ -63,6 +64,7 @@
                             </div>
                         </td>
                     </tr>
+
                 }
 
             </tbody>
@@ -109,8 +111,8 @@
             </thead>
             <tbody>
                 @foreach (var item in Model)
-                {                       
-                    @if (item.IsDeveloperAssigned == false || item.DeveloperName == User.Identity.Name)
+                {
+                    @if (item.IsDeveloperAssigned == false || item.DeveloperUserName == User.Identity.Name)
                     {
                         <tr>
                             <td width="11%">@item.Name</td>
@@ -179,21 +181,26 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td width="11%">@item.Name</td>
-                        <td width="11%">@item.Description</td>
-                        <td width="11%">@item.ProjectName</td>
-                        <td width="11%">@item.ManagerName</td>
-                        <td width="11%">@item.DeveloperName</td>
-                        <td width="11%">@item.Status</td>
-                        <td width="11%">@item.Progress %</td>
-                        <td width="11%">@item.Deadline</td>
-                        <td width="20%">
-                            <div class="text-right role="group">
-                                <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
-                            </div>
-                        </td>
-                    </tr>
+                    @if (item.ManagerUserName == User.Identity.Name)
+                    {
+                        <tr>
+                            <td width="11%">@item.Name</td>
+                            <td width="11%">@item.Description</td>
+                            <td width="11%">@item.ProjectName</td>
+                            <td width="11%">@item.ManagerName</td>
+                            <td width="11%">@item.DeveloperName</td>
+                            <td width="11%">@item.Status</td>
+                            <td width="11%">@item.Progress %</td>
+                            <td width="11%">@item.Deadline</td>
+
+                            <td width="20%">
+                                <div class="text-right role="group">
+                                    <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
+                                </div>
+                            </td>
+                            
+                        </tr>
+                    }
                 }
             </tbody>
         </table>

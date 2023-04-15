@@ -26,11 +26,15 @@ namespace ProjectManagementSystem.Models.ViewModels.AccountViewModels
 
         public string? DeveloperName { get; set; }
 
+        public string? DeveloperUserName { get; set; }
+
         public bool IsDeveloperAssigned { get; set; }
 
         public string? ManagerId { get; set; }
 
         public string? ManagerName { get; set; }
+
+        public string? ManagerUserName { get; set; }
 
         public string AdminId { get; set; }
 

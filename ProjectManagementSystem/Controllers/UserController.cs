@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Data;
 using ProjectManagementSystem.Models;
 using ProjectManagementSystem.Models.ViewModels;
@@ -47,13 +48,96 @@ namespace ProjectManagementSystem.Controllers
                                     where r.Id == roleId
                                     select r.Name
                                     ).First().ToString();
-                    userViewModel.Role = roleName;
+                    userViewModel.RoleName = roleName;
                 }
 
                 userList.Add(userViewModel);
             }
 
             return View(userList);
+        }
+
+        // GET:
+        // EDIT VIEW
+        public IActionResult Edit(string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = _db.Users.Find(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = _db.UserRoles.ToList();
+            var roleId = (from ur in _db.UserRoles
+                          where ur.UserId == user.Id
+                          select ur.RoleId
+                         ).FirstOrDefault();
+
+            var roleName = (from r in _db.Roles
+                            where r.Id == roleId
+                            select r.Name
+                           ).First().ToString();
+
+            UserViewModel userViewModel = new UserViewModel();
+            userViewModel.Name = user.Name;
+            userViewModel.Surname = user.Surname;
+            userViewModel.RoleName = roleName;
+
+            return View(userViewModel);
+        }
+
+        //POST:
+        //Update edited user
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditPost(string? id)
+        {
+            var user = _db.Users.Find(id);
+
+            if (user == null)
+            {
+                // If the user doesn't exist, return a not found error
+                return NotFound();
+            }
+
+            // Get the role name from the form data
+            var roleName = Request.Form["RoleName"];
+
+            if (string.IsNullOrEmpty(roleName))
+            {
+                // If the role name is not provided, return a bad request error
+                return BadRequest();
+            }
+
+            // Find the role in the database
+            var role = _db.Roles.SingleOrDefault(r => r.Name == roleName);
+
+            if (role == null)
+            {
+                // If the role doesn't exist, return a not found error
+                return NotFound();
+            }
+
+            // Find the user's current role
+            var userRole = _db.UserRoles
+                .SingleOrDefault(ur => ur.UserId == id);
+
+            
+                // Update the user's role
+                userRole.RoleId = role.Id;
+            
+
+            // Save changes to the database
+             _db.SaveChanges();
+
+            // Redirect to the user details page
+            return RedirectToAction("Users", new { id = id });
         }
 
         // GET:
@@ -86,7 +170,7 @@ namespace ProjectManagementSystem.Controllers
             UserViewModel userViewModel = new UserViewModel();
             userViewModel.Name = user.Name;
             userViewModel.Surname = user.Surname;
-            userViewModel.Role = roleName;
+            userViewModel.RoleName = roleName;
             return View(userViewModel);
         }
 
