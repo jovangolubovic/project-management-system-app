@@ -28,6 +28,7 @@
                         {
                             <td width="40%">
                                 <div class="col-6 text-right role="group">
+                                    <a asp-controller="User" asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-primary"> Edit</a>
                                     <a asp-controller="User" asp-action="Delete" asp-route-Id="@item.Id" class="btn btn-danger"> Delete</a>
                                 </div>
                             </td>
