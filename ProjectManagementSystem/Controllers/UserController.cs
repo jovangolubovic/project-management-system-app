@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Data;
@@ -15,9 +16,15 @@ namespace ProjectManagementSystem.Controllers
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public UserController(ApplicationDbContext db)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public UserController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
+                              RoleManager<IdentityRole> roleManager)
         {
             _db = db;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET:
@@ -96,48 +103,36 @@ namespace ProjectManagementSystem.Controllers
         //Update edited user
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditPost(string? id)
+        public async Task<IActionResult> Edit(UserViewModel userViewModel)
         {
-            var user = _db.Users.Find(id);
+            var user =  await _userManager.FindByIdAsync(userViewModel.Id);
 
             if (user == null)
             {
-                // If the user doesn't exist, return a not found error
                 return NotFound();
             }
 
-            // Get the role name from the form data
-            string roleName = Request.Form["RoleName"][0];
+            string roleName = Request.Form["RoleName"];
 
             if (string.IsNullOrEmpty(roleName))
             {
-                // If the role name is not provided, return a bad request error
                 return BadRequest();
             }
 
-            // Find the role in the database
-            var role = _db.Roles.SingleOrDefault(r => r.Name == roleName);
+            var role =  await _roleManager.FindByNameAsync(roleName);
 
             if (role == null)
             {
-                // If the role doesn't exist, return a not found error
                 return NotFound();
             }
 
-            // Find the user's current role
-            var userRole = _db.UserRoles
-                .SingleOrDefault(ur => ur.UserId == id);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
-            
-                // Update the user's role
-                userRole.RoleId = role.Id;
-            
+            await _userManager.RemoveFromRolesAsync(user, userRoles);
+            await _userManager.AddToRoleAsync(user, roleName);
+            await _userManager.UpdateAsync(user);
 
-            // Save changes to the database
-             _db.SaveChanges();
-
-            // Redirect to the user details page
-            return RedirectToAction("User", new { id = id });
+            return RedirectToAction("Index");
         }
 
         // GET:
