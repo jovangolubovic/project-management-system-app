@@ -158,7 +158,7 @@ namespace ProjectManagementSystem.Controllers
                                  select t.DeveloperId
                                 ).Count();
 
-            if (developerTask > 3 && task.DeveloperId != null)
+            if (developerTask >= 3 && task.DeveloperId != null)
             {
                 TempData["ErrorMessageForDeveloperTasks"] = "Cannot assign more than 3 Tasks to one Developer!";
                 return RedirectToAction("Create");
@@ -292,7 +292,7 @@ namespace ProjectManagementSystem.Controllers
                                  select tasks.DeveloperId
                                 ).Count();
 
-            if (developerTask > 3 && t.DeveloperId != null)
+            if (developerTask >= 3 && t.DeveloperId != null)
             {
                 TempData["ErrorMessageForDeveloperTasks"] = "Cannot assign more than 3 Tasks to one Developer!";
                 return RedirectToAction("Edit");

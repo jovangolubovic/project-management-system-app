@@ -31,19 +31,18 @@ namespace ProjectManagementSystem.Controllers
         // Returning View with a List of Users
         public IActionResult Index()
         {
-            var users = (from u in _db.Users
-                         select u
-                         ).ToList();
+            var users = _db.Users.ToList();
 
             List<UserViewModel> userList = new List<UserViewModel>();
 
             foreach (ApplicationUser au in users)
             {
-                var userRoles = _db.UserRoles.ToList();
+                
                 UserViewModel userViewModel = new UserViewModel();
                 userViewModel.Id = au.Id;
                 userViewModel.Name = au.Name;
                 userViewModel.Surname = au.Surname;
+
                 var roleId = (from ur in _db.UserRoles
                               where ur.UserId == au.Id
                               select ur.RoleId
@@ -55,6 +54,7 @@ namespace ProjectManagementSystem.Controllers
                                     where r.Id == roleId
                                     select r.Name
                                     ).First().ToString();
+
                     userViewModel.RoleName = roleName;
                 }
 
