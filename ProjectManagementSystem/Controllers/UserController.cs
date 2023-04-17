@@ -107,7 +107,7 @@ namespace ProjectManagementSystem.Controllers
             }
 
             // Get the role name from the form data
-            var roleName = Request.Form["RoleName"];
+            string roleName = Request.Form["RoleName"][0];
 
             if (string.IsNullOrEmpty(roleName))
             {
@@ -137,7 +137,7 @@ namespace ProjectManagementSystem.Controllers
              _db.SaveChanges();
 
             // Redirect to the user details page
-            return RedirectToAction("Users", new { id = id });
+            return RedirectToAction("User", new { id = id });
         }
 
         // GET:

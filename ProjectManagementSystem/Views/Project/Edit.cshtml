@@ -13,7 +13,7 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), new { @class = "form-control select2" })
+                @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname", ViewBag.ProjectManagerId), new { @class = "form-control select2" })
                 <label asp-for="ProjectManagerId">Open this menu to change Project Manager</label>
                 <span asp-validation-for="ProjectManagerId" class="text-danger"></span>
             </div>

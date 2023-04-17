@@ -5,17 +5,22 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>            
             <div class="form-floating mb-3">
                 <input asp-for="Name" class="form-control" placeholder="Name" />
                 <label asp-for="Name">Name of the Project</label>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), new { @class = "form-control select2" })
+                @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), "Select Project Manager", new { @class = "form-control select2" })
                 <label asp-for="ProjectManagerId">Open this menu to select Project Manager</label>
                 <span asp-validation-for="ProjectManagerId" class="text-danger"></span>
             </div>
+            @*<div class="form-floating mb-3">
+            @Html.DropDownListFor(x => x.ManagerList, new SelectList(Model.ManagerList, "Id", "Fullname"), "-- Select an item --")
+            <label asp-for="ManagerList">Open this menu to select Project Manager</label>
+            <span asp-validation-for="ManagerList" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="w-100 btn btn-lg btn-primary mb-3" />
             </div>

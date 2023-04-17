@@ -1,18 +1,18 @@
 ﻿<Properties StartupConfiguration="{41DE8D12-C9A0-4B9E-931C-B5883E89D853}|https">
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.Workbench ActiveDocument="ProjectManagementSystem/Controllers/TaskController.cs">
     <Files>
-      <File FileName="ProjectManagementSystem/Controllers/TaskController.cs" Line="53" Column="1" />
-      <File FileName="ProjectManagementSystem/Views/Task/Edit.cshtml" Line="15" Column="18" />
-      <File FileName="ProjectManagementSystem/Views/Task/Delete.cshtml" Line="1" Column="1" />
-      <File FileName="ProjectManagementSystem/Views/Task/Create.cshtml" Line="50" Column="19" />
-      <File FileName="ProjectManagementSystem/Views/Project/Create.cshtml" Line="21" Column="19" />
-      <File FileName="ProjectManagementSystem/Models/ViewModels/DeveloperViewModel.cs" Line="12" Column="82" />
-      <File FileName="ProjectManagementSystem/Models/ViewModels/ManagerViewModel.cs" Line="12" Column="82" />
-      <File FileName="ProjectManagementSystem/Models/ViewModels/TaskViewModel.cs" Line="25" Column="23" />
-      <File FileName="ProjectManagementSystem/Views/Task/Index.cshtml" Line="110" Column="81" />
-      <File FileName="ProjectManagementSystem/Program.cs" Line="1" Column="1" />
-      <File FileName="ProjectManagementSystem/Controllers/UserController.cs" Line="1" Column="1" />
-      <File FileName="ProjectManagementSystem/Views/Project/Index.cshtml" Line="1" Column="1" />
+      <File FileName="ProjectManagementSystem/Controllers/TaskController.cs" Line="64" Column="1" />
+      <File FileName="ProjectManagementSystem/Views/Task/Create.cshtml" Line="26" Column="101" />
+      <File FileName="ProjectManagementSystem/Views/Task/Edit.cshtml" Line="117" Column="1" />
+      <File FileName="ProjectManagementSystem/Models/ViewModels/TaskViewModel.cs" Line="7" Column="15" />
+      <File FileName="ProjectManagementSystem/Models/ViewModels/ProjectViewModel.cs" Line="1" Column="1" />
+      <File FileName="ProjectManagementSystem/Controllers/ProjectController.cs" Line="52" Column="14" />
+      <File FileName="ProjectManagementSystem/Views/Task/Index.cshtml" Line="1" Column="1" />
+      <File FileName="ProjectManagementSystem/Helper/Helper.cs" Line="1" Column="1" />
+      <File FileName="ProjectManagementSystem/Models/DomainModels/ProjectTask.cs" Line="6" Column="54" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -22,13 +22,17 @@
               <Node name="Controllers" expanded="True">
                 <Node name="TaskController.cs" selected="True" />
               </Node>
+              <Node name="Helper" expanded="True" />
               <Node name="Models" expanded="True">
                 <Node name="DomainModels" expanded="True" />
                 <Node name="ViewModels" expanded="True" />
               </Node>
+              <Node name="Services" expanded="True" />
               <Node name="Views" expanded="True">
+                <Node name="Account" expanded="True" />
                 <Node name="Project" expanded="True" />
                 <Node name="Task" expanded="True" />
+                <Node name="User" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -36,11 +40,8 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.ProjectManagementSystem PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.ProjectManagementSystem PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MultiItemStartupConfigurations />
 </Properties>

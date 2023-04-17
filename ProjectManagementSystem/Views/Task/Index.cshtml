@@ -112,7 +112,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    @if (item.IsDeveloperAssigned == false || item.DeveloperUserName == User.Identity.Name)
+                    @if (item.DeveloperId == null || item.DeveloperUserName == User.Identity.Name)
                     {
                         <tr>
                             <td width="11%">@item.Name</td>
@@ -181,7 +181,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    @if (item.ManagerUserName == User.Identity.Name)
+                    @if (item.ManagerId == null || item.ManagerUserName == User.Identity.Name)
                     {
                         <tr>
                             <td width="11%">@item.Name</td>
@@ -198,7 +198,7 @@
                                     <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
                                 </div>
                             </td>
-                            
+
                         </tr>
                     }
                 }

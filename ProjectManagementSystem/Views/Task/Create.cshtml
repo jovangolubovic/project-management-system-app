@@ -7,10 +7,10 @@
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div id="error-message" class="alert alert-danger" style="display: none"></div>
-            @if (TempData["ErrorMessage"] != null)
+            @if (TempData["ErrorMessageForDeveloperTasks"] != null)
             {
-                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-                TempData["ErrorMessage"] = null; // set error message to null
+                <div class="alert alert-danger">@TempData["ErrorMessageForDeveloperTasks"]</div>
+                TempData["ErrorMessageForDeveloperTasks"] = null; // set error message to null
             }
             <div class="form-floating mb-3">
                 <input asp-for="Name" class="form-control" placeholder="Name" />
@@ -18,25 +18,19 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), new { @class = "form-control select2" })
+                <input asp-for="Description" class="form-control" placeholder="Name" />
+                <label asp-for="Description" class="control-label"></label>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), "Select Project Manager", new { @class = "form-control select2" })
                 <label asp-for="ManagerId">Open this menu to select Project Manager</label>
                 <span asp-validation-for="ManagerId" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                @Html.DropDownList("developerId", new SelectList(ViewBag.DeveloperList, "Id", "Fullname"), new { @class = "form-control select2" })
+                @Html.DropDownList("developerId", new SelectList(ViewBag.DeveloperList, "Id", "Fullname"), "Select Developer", new { @class = "form-control select2" })
                 <label asp-for="DeveloperId" class="control-label">Open this menu to select Developer</label>
                 <span asp-validation-for="DeveloperId" class="text-danger"></span>
-            </div>
-            <div class="checkbox mb-3">
-                <label asp-for="IsDeveloperAssigned">
-                    <input asp-for="IsDeveloperAssigned" />
-                </label>
-                Assign task to developer?
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Description" class="form-control" placeholder="Name" />
-                <label asp-for="Description" class="control-label"></label>
-                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Deadline" class="form-control" placeholder="Name" />

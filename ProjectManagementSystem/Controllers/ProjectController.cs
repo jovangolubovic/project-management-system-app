@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Data;
 using ProjectManagementSystem.Models.DomainModels;
+using ProjectManagementSystem.Models.ViewModels;
 using ProjectManagementSystem.Services;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,8 +23,9 @@ namespace ProjectManagementSystem.Controllers
             _iTaskService = taskService;
         }
 
+
         // GET: 
-        // Returning View with List of Projects
+        // Returning View with List of Projects       
         public IActionResult Index()
         {
             IEnumerable<Project> projectList = _db.Projects;
@@ -44,8 +46,15 @@ namespace ProjectManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Project newProject)
         {
-
             var managerId = Request.Form["managerId"];
+
+            if (string.IsNullOrEmpty(managerId))
+            {
+                TempData["ErrorMessage"] = "Please select a Project Manager.";
+                ViewBag.ManagerList = _iTaskService.getManagerList();
+                return View("Create");
+            }
+
             newProject.ProjectManagerId = managerId;
             newProject.Progress = 0;
             _db.Add(newProject);
@@ -66,7 +75,9 @@ namespace ProjectManagementSystem.Controllers
             {
                 return NotFound();
             }
+
             ViewBag.ManagerList = _iTaskService.getManagerList();
+            ViewBag.ProjectManagerId = project.ProjectManagerId;
             return View(project);
         }
 

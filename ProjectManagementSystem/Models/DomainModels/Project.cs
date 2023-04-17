@@ -16,6 +16,7 @@ namespace ProjectManagementSystem.Models.DomainModels
         public int Progress { get; set; }
 
         [ForeignKey("Users")]
+        [Required(ErrorMessage = "Please select a Project Manager.")]
         public string ProjectManagerId { get; set; }
 
         public ICollection<ProjectTask> Tasks { get; set; }

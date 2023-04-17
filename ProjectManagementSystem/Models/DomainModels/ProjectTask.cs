@@ -29,6 +29,8 @@ namespace ProjectManagementSystem.Models.DomainModels
 
         public bool IsDeveloperAssigned { get; set; }
 
+        public bool IsManagerAssigned { get; set; }
+
         public string? AdminId { get; set; }
 
         public int ProjectId { get; set; }
