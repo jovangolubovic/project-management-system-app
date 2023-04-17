@@ -27,7 +27,7 @@ namespace ProjectManagementSystem.Models.ViewModels.AccountViewModels
 
         [Required]
         [Display(Name = "Role Name ")]
-        public string RoleName { get; set; }
+        public string RoleName { get; set; } = "Default";
     }
 }
 
