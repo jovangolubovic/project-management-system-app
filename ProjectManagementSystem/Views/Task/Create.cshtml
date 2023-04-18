@@ -22,11 +22,11 @@
                 <label asp-for="Description" class="control-label"></label>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
+            @*<div class="form-floating mb-3">
                 @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), "Select Project Manager", new { @class = "form-control select2" })
                 <label asp-for="ManagerId">Open this menu to select Project Manager</label>
                 <span asp-validation-for="ManagerId" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-floating mb-3">
                 @Html.DropDownList("developerId", new SelectList(ViewBag.DeveloperList, "Id", "Fullname"), "Select Developer", new { @class = "form-control select2" })
                 <label asp-for="DeveloperId" class="control-label">Open this menu to select Developer</label>
