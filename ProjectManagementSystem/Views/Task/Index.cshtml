@@ -123,12 +123,15 @@
                             <td width="11%">@item.Status</td>
                             <td width="11%">@item.Progress % </td>
                             <td width="11%">@item.Deadline.</td>
+                            @if (item.DeveloperUserName == User.Identity.Name)
+                            {
+                                <td width="20%">
+                                    <div class="col-6 text-right role="group">
+                                        <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
+                                    </div>
+                                </td>
+                            }
 
-                            <td width="20%">
-                                <div class="col-6 text-right role="group">
-                                    <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
-                                </div>
-                            </td>
                         </tr>
                     }
                 }
@@ -193,11 +196,14 @@
                             <td width="11%">@item.Progress %</td>
                             <td width="11%">@item.Deadline</td>
 
-                            <td width="20%">
-                                <div class="text-right role="group">
-                                    <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
-                                </div>
-                            </td>
+                            @if (item.ManagerUserName == User.Identity.Name)
+                            {
+                                <td width="20%">
+                                    <div class="col-6 text-right role="group">
+                                        <a asp-controller="Task" asp-action="Edit" asp-route-Id="@item.Id" class=" btn btn-primary"> Edit</a>
+                                    </div>
+                                </td>
+                            }
 
                         </tr>
                     }

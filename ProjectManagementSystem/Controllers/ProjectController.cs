@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Data;
@@ -22,7 +23,6 @@ namespace ProjectManagementSystem.Controllers
             _db = db;
             _iTaskService = taskService;
         }
-
 
         // GET: 
         // Returning View with List of Projects       
@@ -46,7 +46,16 @@ namespace ProjectManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Project newProject)
         {
+            var currentUser = HttpContext.User;
+            var roleName = currentUser.FindFirst(ClaimTypes.Role)?.Value;
+            var currentUserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var managerId = Request.Form["managerId"];
+
+            if (roleName == "Project Manager")
+            {
+                managerId = currentUserId;
+            }
 
             if (string.IsNullOrEmpty(managerId))
             {
@@ -54,7 +63,7 @@ namespace ProjectManagementSystem.Controllers
                 ViewBag.ManagerList = _iTaskService.getManagerList();
                 return View("Create");
             }
-
+            
             newProject.ProjectManagerId = managerId;
             newProject.Progress = 0;
             _db.Add(newProject);

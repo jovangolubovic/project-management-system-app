@@ -31,13 +31,12 @@ namespace ProjectManagementSystem.Controllers
         // Returning View with a List of Users
         public IActionResult Index()
         {
-            var users = _db.Users.ToList();
+            //var users = _db.Users.ToList();
 
             List<UserViewModel> userList = new List<UserViewModel>();
 
-            foreach (ApplicationUser au in users)
+            foreach (ApplicationUser au in _db.Users)
             {
-                
                 UserViewModel userViewModel = new UserViewModel();
                 userViewModel.Id = au.Id;
                 userViewModel.Name = au.Name;
@@ -45,15 +44,13 @@ namespace ProjectManagementSystem.Controllers
 
                 var roleId = (from ur in _db.UserRoles
                               where ur.UserId == au.Id
-                              select ur.RoleId
-                              ).FirstOrDefault();
+                              select ur.RoleId).FirstOrDefault();
 
                 if (roleId != null)
                 {
                     var roleName = (from r in _db.Roles
                                     where r.Id == roleId
-                                    select r.Name
-                                    ).First().ToString();
+                                    select r.Name).First().ToString();
 
                     userViewModel.RoleName = roleName;
                 }
@@ -81,15 +78,14 @@ namespace ProjectManagementSystem.Controllers
             }
 
             var userRoles = _db.UserRoles.ToList();
+
             var roleId = (from ur in _db.UserRoles
                           where ur.UserId == user.Id
-                          select ur.RoleId
-                         ).FirstOrDefault();
+                          select ur.RoleId).FirstOrDefault();
 
             var roleName = (from r in _db.Roles
                             where r.Id == roleId
-                            select r.Name
-                           ).First().ToString();
+                            select r.Name).First().ToString();
 
             UserViewModel userViewModel = new UserViewModel();
             userViewModel.Name = user.Name;
@@ -99,8 +95,8 @@ namespace ProjectManagementSystem.Controllers
             return View(userViewModel);
         }
 
-        //POST:
-        //Update edited user
+        // POST:
+        // Update edited user
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UserViewModel userViewModel)
@@ -152,15 +148,14 @@ namespace ProjectManagementSystem.Controllers
             }
 
             var userRoles = _db.UserRoles.ToList();
+
             var roleId = (from ur in _db.UserRoles
                           where ur.UserId == user.Id
-                          select ur.RoleId
-                         ).FirstOrDefault();
+                          select ur.RoleId).FirstOrDefault();
 
             var roleName = (from r in _db.Roles
                             where r.Id == roleId
-                            select r.Name
-                           ).First().ToString();
+                            select r.Name).First().ToString();
 
             UserViewModel userViewModel = new UserViewModel();
             userViewModel.Name = user.Name;

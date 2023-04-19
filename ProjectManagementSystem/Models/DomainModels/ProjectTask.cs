@@ -33,6 +33,7 @@ namespace ProjectManagementSystem.Models.DomainModels
 
         public string? AdminId { get; set; }
 
+        [Required(ErrorMessage = "Please select Project.")]
         public int ProjectId { get; set; }
     }
 }

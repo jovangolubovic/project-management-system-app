@@ -12,6 +12,12 @@
                 <div class="alert alert-danger">@TempData["ErrorMessageForDeveloperTasks"]</div>
                 TempData["ErrorMessageForDeveloperTasks"] = null; // set error message to null
             }
+            @if (ViewBag.ProjectList == null || ViewBag.ProjectList.Count == 0)
+            {
+                <div class="alert alert-danger">
+                    There are no active projects. Task cannot be created.
+                </div>
+            }
             <div class="form-floating mb-3">
                 <input asp-for="Name" class="form-control" placeholder="Name" />
                 <label asp-for="Name">Name of the Task</label>
@@ -23,10 +29,10 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             @*<div class="form-floating mb-3">
-                @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), "Select Project Manager", new { @class = "form-control select2" })
-                <label asp-for="ManagerId">Open this menu to select Project Manager</label>
-                <span asp-validation-for="ManagerId" class="text-danger"></span>
-            </div>*@
+            @Html.DropDownList("managerId", new SelectList(ViewBag.ManagerList, "Id", "Fullname"), "Select Project Manager", new { @class = "form-control select2" })
+            <label asp-for="ManagerId">Open this menu to select Project Manager</label>
+            <span asp-validation-for="ManagerId" class="text-danger"></span>
+        </div>*@
             <div class="form-floating mb-3">
                 @Html.DropDownList("developerId", new SelectList(ViewBag.DeveloperList, "Id", "Fullname"), "Select Developer", new { @class = "form-control select2" })
                 <label asp-for="DeveloperId" class="control-label">Open this menu to select Developer</label>
@@ -38,7 +44,7 @@
                 <span asp-validation-for="Deadline" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                @Html.DropDownList("projectId", new SelectList(ViewBag.ProjectList, "Id", "Name"), new { @class = "form-control select2" })
+                @Html.DropDownList("projectId", new SelectList(ViewBag.ProjectList, "Id", "Name"), "Select Project", new { @class = "form-control select2", required = "required", data_val = "true", data_val_required = "Project is required field." })   
                 <label asp-for="ProjectId" class="control-label">Project</label>
                 <span asp-validation-for="ProjectId" class="text-danger"></span>
             </div>

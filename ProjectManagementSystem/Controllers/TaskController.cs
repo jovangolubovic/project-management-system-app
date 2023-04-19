@@ -57,51 +57,25 @@ namespace ProjectManagementSystem.Controllers
                                            where p.Id == t.ProjectId
                                            select p.ProjectManagerId).First();
 
-                var projectName = (from p in _db.Projects
-                                   where p.Id == t.ProjectId
-                                   select p.Name).ToList();
+                taskViewModel.ProjectName = (from p in _db.Projects
+                                             where p.Id == t.ProjectId
+                                             select p.Name).First();
 
-                taskViewModel.ProjectName = projectName.First();
+                taskViewModel.ManagerName = (from m in _db.Users
+                                             where m.Id == taskViewModel.ManagerId
+                                             select m.Name + " " + m.Surname).FirstOrDefault();
 
-                var managerName = (from m in _db.Users
-                                   where m.Id == taskViewModel.ManagerId
-                                   select m.Name + " " + m.Surname
-                                  ).ToList();
+                taskViewModel.ManagerUserName = (from m in _db.Users
+                                                 where m.Id == taskViewModel.ManagerId
+                                                 select m.Email).FirstOrDefault();
 
-                var managerUserName = (from m in _db.Users
-                                       where m.Id == taskViewModel.ManagerId
-                                       select m.Email
-                                      ).ToList();
+                taskViewModel.DeveloperName = (from d in _db.Users
+                                               where d.Id == t.DeveloperId
+                                               select d.Name + " " + d.Surname).FirstOrDefault();
 
-                if (managerName.Count != 0)
-                {
-                    taskViewModel.ManagerName = managerName.First();
-                }
-
-                if (managerUserName.Count != 0)
-                {
-                    taskViewModel.ManagerUserName = managerUserName.First();
-                }
-
-                var developerName = (from d in _db.Users
-                                     where d.Id == t.DeveloperId
-                                     select d.Name + " " + d.Surname
-                                    ).ToList();
-
-                var developerUserName = (from d in _db.Users
-                                         where d.Id == t.DeveloperId
-                                         select d.Email
-                                        ).ToList();
-
-                if (developerName.Count != 0)
-                {
-                    taskViewModel.DeveloperName = developerName.First();
-                }
-
-                if (developerUserName.Count != 0)
-                {
-                    taskViewModel.DeveloperUserName = developerUserName.First();
-                }
+                taskViewModel.DeveloperUserName = (from d in _db.Users
+                                                   where d.Id == t.DeveloperId
+                                                   select d.Email).FirstOrDefault();
 
                 taskViewModelList.Add(taskViewModel);
             }
@@ -113,8 +87,6 @@ namespace ProjectManagementSystem.Controllers
         // Returning View for Creation of Task
         public IActionResult Create()
         {
-            ViewBag.Status = _iTaskService.getStatusList();
-            ViewBag.ManagerList = _iTaskService.getManagerList();
             ViewBag.DeveloperList = _iTaskService.getDeveloperList();
             ViewBag.ProjectList = _iTaskService.getProjectList();
 
@@ -127,17 +99,15 @@ namespace ProjectManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TaskViewModel taskViewModel)
         {
+
             ProjectTask task = new ProjectTask();
 
             task.Name = taskViewModel.Name;
             task.Description = taskViewModel.Description;
             task.AdminId = _userManager.GetUserId(User);
-            string deadline = taskViewModel.Deadline;
-            task.Deadline = DateTime.ParseExact(deadline, "dd.MM.yyyy", null);            
+            task.Deadline = DateTime.ParseExact(taskViewModel.Deadline, "dd.MM.yyyy", null);
             task.IsManagerAssigned = true;
             task.IsDeveloperAssigned = true;
-            
-            string statusTask = Request.Form["status"];
 
             // Not more than 3 Tasks per Developer validation
             task.DeveloperId = Request.Form["developerId"];
@@ -150,8 +120,7 @@ namespace ProjectManagementSystem.Controllers
 
             int developerTask = (from t in _db.Tasks
                                  where task.DeveloperId == t.DeveloperId
-                                 select t.DeveloperId
-                                ).Count();
+                                 select t.DeveloperId).Count();
 
             if (developerTask >= 3 && task.DeveloperId != null)
             {
@@ -165,12 +134,11 @@ namespace ProjectManagementSystem.Controllers
             // Add Project to Task
             string projectId = Request.Form["projectId"];
             int pId = int.Parse(projectId);
-            var projects = (from p in _db.Projects
-                            where p.Id == pId
-                            select p
-                           ).ToList();
 
-            Project project = projects.First();
+            Project project = (from p in _db.Projects
+                               where p.Id == pId
+                               select p).First();
+
             task.ProjectId = project.Id;
             task.ManagerId = project.ProjectManagerId;
             task.IsManagerAssigned = true;
@@ -195,7 +163,7 @@ namespace ProjectManagementSystem.Controllers
             }
 
             List<ProjectTask> taskViewModelList = new List<ProjectTask>();
-            IEnumerable<ProjectTask> taskList = _db.Tasks;
+            //IEnumerable<ProjectTask> taskList = _db.Tasks;
             ProjectTask t = _db.Tasks.Find(id);
 
             if (t == null)
@@ -213,20 +181,7 @@ namespace ProjectManagementSystem.Controllers
             taskViewModel.Progress = t.Progress;
             taskViewModel.ProjectId = t.ProjectId;
 
-            //var managerName = (from m in _db.Users
-            //                   where m.Id == t.ManagerId
-            //                   select m.Name
-            //                  ).ToList();
-
-            //if (managerName.Count != 0)
-            //{
-            //    taskViewModel.ManagerName = managerName.First();
-            //}
-
-            ViewBag.ManagerList = _iTaskService.getManagerList();
             ViewBag.DeveloperList = _iTaskService.getDeveloperList();
-            ViewBag.ProjectList = _iTaskService.getProjectList();
-            //ViewBag.ProjectManagerId = t.ManagerId;
             ViewBag.DeveloperId = t.DeveloperId;
 
             return View(taskViewModel);
@@ -243,34 +198,8 @@ namespace ProjectManagementSystem.Controllers
 
             ProjectTask t = _db.Tasks.Find(taskViewModel.Id);
 
-            if (roleName == "Admin")
+            if (roleName == "Admin" || roleName == "Project Manager")
             {
-                //if (!string.IsNullOrEmpty(Request.Form["managerId"]))
-                //{
-                //    t.ManagerId = Request.Form["managerId"];
-                //    t.IsManagerAssigned = true;
-                //}
-                //else
-                //{
-                //    t.ManagerId = null;
-                //    t.IsManagerAssigned = false;
-                //}
-
-                if (!string.IsNullOrEmpty(Request.Form["developerId"]))
-                {
-                    t.DeveloperId = Request.Form["developerId"];
-                    t.IsDeveloperAssigned = true;
-                }
-                else
-                {
-                    t.DeveloperId = null;
-                    t.IsDeveloperAssigned = false;
-                }
-            }
-
-            if (roleName == "Project Manager")
-            {
-
                 if (!string.IsNullOrEmpty(Request.Form["developerId"]))
                 {
                     t.DeveloperId = Request.Form["developerId"];
@@ -286,10 +215,13 @@ namespace ProjectManagementSystem.Controllers
             // Not more than 3 Tasks per Developer validation
             int developerTask = (from tasks in _db.Tasks
                                  where t.DeveloperId == tasks.DeveloperId
-                                 select tasks.DeveloperId
-                                ).Count();
+                                 select tasks.DeveloperId).Count();
 
-            if (developerTask >= 3 && t.DeveloperId != null && t.DeveloperId != Request.Form["developerId"])
+            var currentDeveloper = (from tasks in _db.Tasks
+                                    where t.Id == tasks.Id
+                                    select tasks.DeveloperId).FirstOrDefault();
+
+            if (developerTask >= 3 && t.DeveloperId != null && currentDeveloper != Request.Form["developerId"])
             {
                 TempData["ErrorMessageForDeveloperTasks"] = "Cannot assign more than 3 Tasks to one Developer!";
                 return RedirectToAction("Edit");
@@ -297,6 +229,9 @@ namespace ProjectManagementSystem.Controllers
 
             t.Description = taskViewModel.Description;
             t.Progress = taskViewModel.Progress;
+            t.ManagerId = (from p in _db.Projects
+                           where p.Id == t.ProjectId
+                           select p.ProjectManagerId).FirstOrDefault();
 
             if (t.Progress == 100)
             {
@@ -334,32 +269,18 @@ namespace ProjectManagementSystem.Controllers
             TaskViewModel taskViewModel = new TaskViewModel();
             taskViewModel.Id = task.Id;
             taskViewModel.Name = task.Name;
-            var projectName = (from p in _db.Projects
-                               where p.Id == task.ProjectId
-                               select p.Name
-                              ).ToList();
 
-            taskViewModel.ProjectName = projectName.First();
+            taskViewModel.ProjectName = (from p in _db.Projects
+                                         where p.Id == task.ProjectId
+                                         select p.Name).First();
 
-            var developerName = (from d in _db.Users
-                                 where d.Id == task.DeveloperId
-                                 select d.Name + " " + d.Surname
-                                ).ToList();
+            taskViewModel.DeveloperName = (from d in _db.Users
+                                           where d.Id == task.DeveloperId
+                                           select d.Name + " " + d.Surname).FirstOrDefault();
 
-            if (developerName != null)
-            {
-                taskViewModel.DeveloperName = developerName.FirstOrDefault();
-            }
-
-            var managerName = (from m in _db.Users
-                               where m.Id == task.ManagerId
-                               select m.Name + " " + m.Surname
-                              ).ToList();
-
-            if (managerName != null)
-            {
-                taskViewModel.ManagerName = managerName.FirstOrDefault();
-            }
+            taskViewModel.ManagerName = (from m in _db.Users
+                                         where m.Id == task.ManagerId
+                                         select m.Name + " " + m.Surname).FirstOrDefault();
 
             return View(taskViewModel);
         }
@@ -387,8 +308,7 @@ namespace ProjectManagementSystem.Controllers
         {
             int tasksCount = (from tasks in _db.Tasks
                               where tasks.ProjectId == t.ProjectId
-                              select tasks.Id
-                             ).Count();
+                              select tasks.Id).Count();
             int sum = 0;
             foreach (ProjectTask task in _db.Tasks)
             {
@@ -400,8 +320,7 @@ namespace ProjectManagementSystem.Controllers
 
             Project project = (from p in _db.Projects
                                where p.Id == t.ProjectId
-                               select p
-                              ).First();
+                               select p).First();
             if (sum != 0)
             {
                 int progressOfProject = sum / tasksCount;
