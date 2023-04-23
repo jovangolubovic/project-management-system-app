@@ -44,7 +44,7 @@ namespace ProjectManagementSystem.Services
                             {
                                 Id = user.Id,
                                 Name = user.Name,
-                                Surname = user.Surname
+                                Surname = user.Surname                            
                             }
                             ).ToList();
 
@@ -57,13 +57,14 @@ namespace ProjectManagementSystem.Services
             var users = (from user in _db.Users
                          join userRoles in _db.UserRoles
                          on user.Id equals userRoles.UserId
-                         join roles in _db.Roles.Where(x => x.Name != Helper.Helper.Admin)
+                         join roles in _db.Roles
                          on userRoles.RoleId equals roles.Id
                          select new UserViewModel
                          {
                              Id = user.Id,
                              Name = user.Name,
-                             Surname = user.Surname
+                             Surname = user.Surname,
+                             RoleName = roles.Name
                          }
                         ).ToList();
 

@@ -22,7 +22,7 @@ namespace ProjectManagementSystem.Controllers
     {
         private readonly ITaskService _iTaskService;
         private readonly UserManager<ApplicationUser> _userManager;
-        ApplicationDbContext _db;
+        private readonly ApplicationDbContext _db;
 
         public TaskController(ITaskService taskService, ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
@@ -35,8 +35,8 @@ namespace ProjectManagementSystem.Controllers
         // Returning View with List of Tasks
         public IActionResult Index()
         {
-            ViewBag.DeveloperList = _iTaskService.getDeveloperList();
-            ViewBag.ManagerList = _iTaskService.getManagerList();
+            //ViewBag.DeveloperList = _iTaskService.getDeveloperList();
+            //ViewBag.ManagerList = _iTaskService.getManagerList();
 
             List<TaskViewModel> taskViewModelList = new List<TaskViewModel>();
             List<ProjectTask> taskList = _db.Tasks.ToList();
@@ -55,11 +55,11 @@ namespace ProjectManagementSystem.Controllers
 
                 taskViewModel.ManagerId = (from p in _db.Projects
                                            where p.Id == t.ProjectId
-                                           select p.ProjectManagerId).First();
+                                           select p.ProjectManagerId).FirstOrDefault();
 
                 taskViewModel.ProjectName = (from p in _db.Projects
                                              where p.Id == t.ProjectId
-                                             select p.Name).First();
+                                             select p.Name).FirstOrDefault();
 
                 taskViewModel.ManagerName = (from m in _db.Users
                                              where m.Id == taskViewModel.ManagerId

@@ -1,26 +1,37 @@
 ﻿<Properties StartupConfiguration="{41DE8D12-C9A0-4B9E-931C-B5883E89D853}|https">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.ItemProperties.ProjectManagementSystem PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ProjectManagementSystem/Controllers/TaskController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench ActiveDocument="ProjectManagementSystem/Views/Project/Create.cshtml">
     <Files>
-      <File FileName="ProjectManagementSystem/Controllers/TaskController.cs" Line="100" Column="44" />
+      <File FileName="ProjectManagementSystem/Models/ViewModels/UserViewModel.cs" Line="1" Column="1" />
+      <File FileName="ProjectManagementSystem/Views/Project/Index.cshtml" Line="1" Column="1" />
+      <File FileName="ProjectManagementSystem/Views/Project/Create.cshtml" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="ProjectManagementSystem" expanded="True">
-            <Node name="New Folder" selected="True" />
             <Node name="ProjectManagementSystem" expanded="True">
               <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="DomainModels" expanded="True" />
+              </Node>
+              <Node name="Views" expanded="True" />
             </Node>
+            <Node name="ProjectManagementSystemUnitTests" expanded="True" />
           </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="ProjectManagementSystem" expanded="True" selected="True" />
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
 </Properties>

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Data;
 using ProjectManagementSystem.Models;
 using ProjectManagementSystem.Models.ViewModels;
+using ProjectManagementSystem.Services;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,13 +19,15 @@ namespace ProjectManagementSystem.Controllers
         private readonly ApplicationDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ITaskService _iTaskService;
 
         public UserController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
-                              RoleManager<IdentityRole> roleManager)
+                              RoleManager<IdentityRole> roleManager, ITaskService iTaskService)
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
+            _iTaskService = iTaskService;
         }
 
         // GET:
@@ -33,30 +36,32 @@ namespace ProjectManagementSystem.Controllers
         {
             //var users = _db.Users.ToList();
 
-            List<UserViewModel> userList = new List<UserViewModel>();
+            //List<UserViewModel> userList = new List<UserViewModel>();
 
-            foreach (ApplicationUser au in _db.Users)
-            {
-                UserViewModel userViewModel = new UserViewModel();
-                userViewModel.Id = au.Id;
-                userViewModel.Name = au.Name;
-                userViewModel.Surname = au.Surname;
+            //foreach (ApplicationUser au in _db.Users)
+            //{
+            //    UserViewModel userViewModel = new UserViewModel();
+            //    userViewModel.Id = au.Id;
+            //    userViewModel.Name = au.Name;
+            //    userViewModel.Surname = au.Surname;
 
-                var roleId = (from ur in _db.UserRoles
-                              where ur.UserId == au.Id
-                              select ur.RoleId).FirstOrDefault();
+            //    var roleId = (from ur in _db.UserRoles
+            //                  where ur.UserId == au.Id
+            //                  select ur.RoleId).FirstOrDefault();
 
-                if (roleId != null)
-                {
-                    var roleName = (from r in _db.Roles
-                                    where r.Id == roleId
-                                    select r.Name).First().ToString();
+            //    if (roleId != null)
+            //    {
+            //        var roleName = (from r in _db.Roles
+            //                        where r.Id == roleId
+            //                        select r.Name).First().ToString();
 
-                    userViewModel.RoleName = roleName;
-                }
+            //        userViewModel.RoleName = roleName;
+            //    }
 
-                userList.Add(userViewModel);
-            }
+            //    userList.Add(userViewModel);
+            //}
+
+            List<UserViewModel> userList = _iTaskService.getUserList();
 
             return View(userList);
         }

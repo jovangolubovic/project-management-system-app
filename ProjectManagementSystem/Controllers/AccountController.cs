@@ -15,9 +15,9 @@ namespace ProjectManagementSystem.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _db;
-        UserManager<ApplicationUser> _userManager;
-        SignInManager<ApplicationUser> _signInManager;
-        RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AccountController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
@@ -97,10 +97,16 @@ namespace ProjectManagementSystem.Controllers
                 foreach (var Error in result.Errors)
                 {
                     ModelState.AddModelError("", Error.Description);
-
                 }
             }
-            return RedirectToAction("Login", "Account");
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Register", "Account");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
         }
 
         [HttpPost]
